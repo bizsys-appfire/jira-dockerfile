@@ -1,0 +1,35 @@
+version: '2.2'
+services:
+  jira:
+    image: atlassian/jira-software:8.20-ubuntu-jdk11
+    environment:
+      - 'ALT_PROXY_NAME=jira-testenv.snapbytes.com'
+      - 'ALT_PROXY_PORT=443'
+      - 'ALT_TOMCAT_SCHEME=https'
+      - 'VIRTUAL_HOST=jira-testenv.snapbytes.com'
+      - 'LETSENCRYPT_HOST=jira-testenv.snapbytes.com'
+      - 'LETSENCRYPT_EMAIL=saikumar.akula@appfire.com'
+      - 'JVM_MINIMUM_MEMORY=1024m'
+      - 'JVM_MAXIMUM_MEMORY=2048m'
+    volumes:
+      - ./data:/opt/atlassian/jira/data
+    networks:
+      - public
+      - default
+    restart: always
+
+  postgresql_jira:
+    image: postgres:11.16
+    environment:
+      - 'POSTGRES_PASSWORD=3X@_aU&c$zyF}gr_'
+      - 'POSTGRES_USER=jira'
+      - 'POSTGRES_DB=jira-sb'
+      - 'POSTGRES_INITDB_ARGS=-E UNICODE --locale=C'
+    volumes:
+      - ./postgres_jira:/var/lib/postgresql/data
+    restart: always
+
+networks:
+  public:
+    external: true
+    
